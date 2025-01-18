@@ -9,6 +9,8 @@ declare module 'vue' {
   export interface GlobalComponents {
     Button: typeof import('primevue/button')['default']
     Card: typeof import('primevue/card')['default']
+    Column: typeof import('primevue/column')['default']
+    DataTable: typeof import('primevue/datatable')['default']
     Dialog: typeof import('primevue/dialog')['default']
     Form: typeof import('@primevue/forms/form')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
@@ -18,7 +20,14 @@ declare module 'vue' {
     Message: typeof import('primevue/message')['default']
     NewQuestionDialog: typeof import('./src/components/NewQuestionDialog.vue')['default']
     QuestionCard: typeof import('./src/components/QuestionCard.vue')['default']
+    QuestionsTable: typeof import('./src/components/QuestionsTable.vue')['default']
     SplitButton: typeof import('primevue/splitbutton')['default']
+    Toast: typeof import('primevue/toast')['default']
+    ToggleButton: typeof import('primevue/togglebutton')['default']
+    ToggleSwitch: typeof import('primevue/toggleswitch')['default']
     Toolbar: typeof import('primevue/toolbar')['default']
+  }
+  export interface ComponentCustomProperties {
+    AnimateOnScroll: typeof import('primevue/animateonscroll')['default']
   }
 }

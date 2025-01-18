@@ -6,7 +6,7 @@
         <p v-if="!showAnswer" class="m-0">
           {{ currentQuestion.question }}
         </p>
-        <p v-else class="m-0">
+        <p v-animateonscroll="{ enterClass: 'animate-flipleft', leaveClass: 'animate-flipleft' }" v-else class=" m-0">
           {{ currentQuestion.answer }}
         </p>
       </div>

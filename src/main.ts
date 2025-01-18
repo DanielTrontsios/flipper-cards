@@ -5,9 +5,10 @@ import '/node_modules/primeflex/primeflex.css'
 import 'primeicons/primeicons.css'
 import App from './App.vue'
 import Aura from '@primevue/themes/aura';
+import ToastService from 'primevue/toastservice';
 
-const app = createApp(App)
-
+const app = createApp(App);
+app.use(ToastService);
 app.use(PrimeVue, {
   theme: {
     preset: Aura

@@ -1,5 +1,6 @@
 <template>
-  <Button icon="pi pi-plus" class="mr-2" severity="secondary" text @click="visible = true" />
+  <Toast />
+  <Button icon="pi pi-plus" severity="secondary" text @click="visible = true" />
   <Dialog v-model:visible="visible" modal header="Add New Question">
     <span class="text-surface-500 dark:text-surface-400 block mb-4">Populate the new question and the related
       answer.</span>
@@ -18,14 +19,18 @@
     <div class="flex justify-end gap-2">
       <Button type="button" label="Cancel" severity="secondary" @click="handleCancel()"></Button>
       <Button type="button" label="Save" @click="handleSave()"></Button>
+      <Button type="button" label="Save & New" @click="handleSave(true)"></Button>
     </div>
   </Dialog>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
+import { useToast } from "primevue/usetoast";
+
 import type { Question } from "../types";
 
+const toast = useToast();
 const emit = defineEmits(['addQuestion']);
 
 const question = ref({} as Omit<Question, 'id'>);
@@ -36,12 +41,13 @@ const handleCancel = () => {
   visible.value = false;
 }
 
-const handleSave = () => {
+const handleSave = (andNew: boolean = false) => {
   if (!question.value.question || !question.value.answer) {
     return;
   }
   emit('addQuestion', question.value);
+  toast.add({ severity: 'success', summary: 'Success', detail: 'New Question Added', life: 3000 });
   question.value = {} as Omit<Question, 'id'>;
-  visible.value = false;
+  if (!andNew) visible.value = false;
 };
 </script>
