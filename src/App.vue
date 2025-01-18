@@ -1,9 +1,18 @@
+<template>
+  <Toolbar style="border: none" class="m-3">
+    <template #start>
+      <NewQuestionDialog @addQuestion="(question) => addQuestion(question)" />
+      <Button icon="pi pi-print" class="mr-2" severity="secondary" text />
+      <Button icon="pi pi-upload" severity="secondary" text />
+    </template>
+  </Toolbar>
+
+  <QuestionCard :currentQuestion="currentQuestion" @nextQuestion="(from: string) => nextQuestion(from)" />
+</template>
+
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import type { Question } from "./types";
-
-const showAnswer = ref(false);
-
 const currentQuestionIndex = ref(0);
 
 const questions = ref<Question[]>([
@@ -14,28 +23,23 @@ const knownQuestions = ref<Question[]>([]);
 const unknownQuestions = ref<Question[]>([]);
 
 const currentQuestion = computed(() => questions.value[currentQuestionIndex.value]);
+
+const nextQuestion = (from: string) => {
+  if (from === 'dontKnow') {
+    unknownQuestions.value.push(currentQuestion.value);
+  } else {
+    knownQuestions.value.push(currentQuestion.value);
+  }
+
+  if (currentQuestionIndex.value < questions.value.length - 1) {
+    currentQuestionIndex.value++;
+  }
+  console.log(knownQuestions.value);
+  console.log(unknownQuestions.value);
+
+};
+
+const addQuestion = (question: Omit<Question, 'id'>) => {
+  questions.value.push({ ...question, id: (questions.value.length + 1).toString() });
+};
 </script>
-
-<template>
-  <Card class="m-3">
-    <template #title>Simple Card</template>
-    <template #content>
-      <div @click="showAnswer = !showAnswer">
-        <p v-if="!showAnswer" class="m-0">
-          {{ currentQuestion.question }}
-        </p>
-        <p v-else class="m-0">
-          {{ currentQuestion.answer }}
-        </p>
-      </div>
-    </template>
-    <template #footer>
-      <div class="flex flex-wrap md:gap-4 gap-1 mt-1">
-        <Button label="I Don't Know" severity="danger" outlined class="w-full" />
-        <Button label="I Know" class="w-full" />
-      </div>
-    </template>
-  </Card>
-</template>
-
-<style scoped></style>

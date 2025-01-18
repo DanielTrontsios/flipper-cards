@@ -9,6 +9,16 @@ declare module 'vue' {
   export interface GlobalComponents {
     Button: typeof import('primevue/button')['default']
     Card: typeof import('primevue/card')['default']
+    Dialog: typeof import('primevue/dialog')['default']
+    Form: typeof import('@primevue/forms/form')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
+    IconField: typeof import('primevue/iconfield')['default']
+    InputIcon: typeof import('primevue/inputicon')['default']
+    InputText: typeof import('primevue/inputtext')['default']
+    Message: typeof import('primevue/message')['default']
+    NewQuestionDialog: typeof import('./src/components/NewQuestionDialog.vue')['default']
+    QuestionCard: typeof import('./src/components/QuestionCard.vue')['default']
+    SplitButton: typeof import('primevue/splitbutton')['default']
+    Toolbar: typeof import('primevue/toolbar')['default']
   }
 }
