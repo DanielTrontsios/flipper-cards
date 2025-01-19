@@ -27,6 +27,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useToast } from "primevue/usetoast";
+import { db } from '../plugins/db';
 
 import type { Question } from "../types";
 
@@ -41,13 +42,22 @@ const handleCancel = () => {
   visible.value = false;
 }
 
-const handleSave = (andNew: boolean = false) => {
+const handleSave = async (andNew: boolean = false) => {
   if (!question.value.question || !question.value.answer) {
     return;
   }
-  emit('addQuestion', question.value);
-  toast.add({ severity: 'success', summary: 'Success', detail: 'New Question Added', life: 3000 });
-  question.value = {} as Omit<Question, 'id'>;
-  if (!andNew) visible.value = false;
+  try {
+    // Add the new friend!
+    const id = await db.questions.add({
+      question: question.value.question,
+      answer: question.value.answer
+    });
+    emit('addQuestion', question.value);
+    toast.add({ severity: 'success', summary: 'Success', detail: 'New Question Added', life: 3000 });
+    question.value = {} as Omit<Question, 'id'>;
+    if (!andNew) visible.value = false;
+  } catch (error) {
+    toast.add({ severity: 'error', summary: 'Error', detail: error, life: 3000 });
+  }
 };
 </script>

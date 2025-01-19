@@ -10,18 +10,24 @@
   </Toolbar>
   <QuestionsTable v-if="showQuestions" class="m-3" :questions="questions" />
 
-  <QuestionCard :currentQuestion="currentQuestion" @nextQuestion="(from: string) => nextQuestion(from)" />
+  <QuestionCard v-if="questions?.length" :currentQuestion="currentQuestion"
+    @nextQuestion="(from: string) => nextQuestion(from)" />
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import type { Question } from "./types";
+import { liveQuery } from "dexie";
+import { useObservable, from } from "@vueuse/rxjs";
+import { db } from './plugins/db';
+
 const showQuestions = ref(false);
 const currentQuestionIndex = ref(0);
 
-const questions = ref<Question[]>([
-  { id: '1', question: 'Is this correct?', answer: 'this is the answer!' },
-  { id: '2', question: 'Is the second correct?', answer: 'this is the second answer!' }])
+const questionsLocal = ref<Question[]>([])
+const questions = useObservable<Question[]>(
+  from(liveQuery(() => db.questions.toArray()))
+)
 
 const knownQuestions = ref<Question[]>([]);
 const unknownQuestions = ref<Question[]>([]);
@@ -43,7 +49,7 @@ const nextQuestion = (from: string) => {
 
 };
 
-const addQuestion = (question: Omit<Question, 'id'>) => {
+const addQuestion = async (question: Omit<Question, 'id'>) => {
   questions.value.push({ ...question, id: (questions.value.length + 1).toString() });
 };
 

@@ -2,7 +2,7 @@
   <Card class="m-3">
     <template #title>Simple Card</template>
     <template #content>
-      <div @click="showAnswer = !showAnswer">
+      <div class="p-5" @click="showAnswer = !showAnswer">
         <p v-if="!showAnswer" class="m-0">
           {{ currentQuestion.question }}
         </p>
