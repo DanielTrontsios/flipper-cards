@@ -1,17 +1,34 @@
 <template>
   <Toolbar style="border: none" class="m-3">
     <template #start>
-      <NewQuestionDialog @addQuestion="(question: Omit<Question, 'id'>) => addQuestion(question)" />
+      <NewQuestionDialog />
       <Button :icon="showQuestionsIcon" label="Questions Table" severity="secondary" text
         @click="showQuestions = !showQuestions" />
       <Button icon="pi pi-print" class="mr-2" severity="secondary" text />
       <Button icon="pi pi-upload" severity="secondary" text />
     </template>
+    <template #end>
+      <Button icon="pi pi-trash" severity="danger" outlined @click="openDeleteSelectedDialog"
+        :disabled="!selectedQuestions || !selectedQuestions.length" />
+    </template>
   </Toolbar>
-  <QuestionsTable v-if="showQuestions" class="m-3" :questions="questions" />
+
+  <QuestionsTable v-if="showQuestions" class="m-3" :questions="questions"
+    v-model:selectedQuestions="selectedQuestions" />
 
   <QuestionCard v-if="questions?.length" :currentQuestion="currentQuestion"
     @nextQuestion="(from: string) => nextQuestion(from)" />
+
+  <Dialog v-model:visible="deleteQuestionsDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
+    <div class="flex items-center gap-4">
+      <i class="pi pi-exclamation-triangle !text-3xl" />
+      <span>Are you sure you want to delete the selected products?</span>
+    </div>
+    <template #footer>
+      <Button label="No" icon="pi pi-times" text @click="deleteQuestionsDialog = false" />
+      <Button label="Yes" icon="pi pi-check" text @click="confirmDeleteSelected" />
+    </template>
+  </Dialog>
 </template>
 
 <script setup lang="ts">
@@ -24,7 +41,9 @@ import { db } from './plugins/db';
 const showQuestions = ref(false);
 const currentQuestionIndex = ref(0);
 
-const questionsLocal = ref<Question[]>([])
+const selectedQuestions = ref([]);
+const deleteQuestionsDialog = ref(false);
+
 const questions = useObservable<Question[]>(
   from(liveQuery(() => db.questions.toArray()))
 )
@@ -49,8 +68,15 @@ const nextQuestion = (from: string) => {
 
 };
 
-const addQuestion = async (question: Omit<Question, 'id'>) => {
-  questions.value.push({ ...question, id: (questions.value.length + 1).toString() });
+const openDeleteSelectedDialog = () => {
+  deleteQuestionsDialog.value = true;
+};
+
+const confirmDeleteSelected = async () => {
+  await db.questions.bulkDelete(selectedQuestions.value.map((question: Question) => question.id));
+  deleteQuestionsDialog.value = false;
+  selectedQuestions.value = [];
+  // toast.add({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
 };
 
 const showQuestionsIcon = computed(() => showQuestions.value ? 'pi pi-eye-slash' : 'pi pi-eye');

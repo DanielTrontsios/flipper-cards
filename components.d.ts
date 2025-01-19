@@ -22,6 +22,7 @@ declare module 'vue' {
     QuestionCard: typeof import('./src/components/QuestionCard.vue')['default']
     QuestionsTable: typeof import('./src/components/QuestionsTable.vue')['default']
     SplitButton: typeof import('primevue/splitbutton')['default']
+    Tests: typeof import('./src/components/tests.vue')['default']
     Toast: typeof import('primevue/toast')['default']
     ToggleButton: typeof import('primevue/togglebutton')['default']
     ToggleSwitch: typeof import('primevue/toggleswitch')['default']
