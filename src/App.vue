@@ -16,10 +16,11 @@
   <QuestionsTable v-if="showQuestions" class="m-3" :questions="questions"
     v-model:selectedQuestions="selectedQuestions" />
 
-  <QuestionCard v-if="questions?.length" :currentQuestion="currentQuestion"
+  <QuestionCard v-if="currentRunQuestions.length" :currentQuestion="currentQuestion"
     @nextQuestion="(from: string) => nextQuestion(from)" />
 
-  <CompletionCard v-else />
+  <CompletionCard v-else :showReview="unknownQuestions.length" @reviewUnknown="reviewUnknownQuestions"
+    @startOver="startOver" />
 
   <Dialog v-model:visible="showDeleteQuestionsDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
     <div class="flex items-center gap-4">
@@ -48,25 +49,28 @@ const showDeleteQuestionsDialog = ref(false);
 
 const questions = useObservable<Question[]>(
   from(liveQuery(() => db.questions.toArray()))
-)
+);
 
 const knownQuestions = ref<Question[]>([]);
 const unknownQuestions = ref<Question[]>([]);
 
-const currentQuestion = computed(() => questions.value[currentQuestionIndex.value]);
+const currentRunQuestions = ref<Question[]>([]);
+const currentQuestion = computed(() => currentRunQuestions.value[currentQuestionIndex.value]);
 
 const nextQuestion = (from: string) => {
+
   if (from === 'dontKnow') {
     unknownQuestions.value.push(currentQuestion.value);
   } else {
     knownQuestions.value.push(currentQuestion.value);
   }
 
-  if (currentQuestionIndex.value < questions.value.length - 1) {
+  if (currentQuestionIndex.value < currentRunQuestions.value.length - 1) {
     currentQuestionIndex.value++;
+  } else {
+    currentQuestionIndex.value = 0;
+    currentRunQuestions.value = [];
   }
-  console.log(knownQuestions.value);
-  console.log(unknownQuestions.value);
 };
 
 const openDeleteSelectedDialog = () => {
@@ -77,8 +81,22 @@ const confirmDeleteSelected = async () => {
   await db.questions.bulkDelete(selectedQuestions.value.map((question: Question) => question.id));
   showDeleteQuestionsDialog.value = false;
   selectedQuestions.value = [];
-  // toast.add({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
+};
+
+const reviewUnknownQuestions = () => {
+  currentRunQuestions.value = unknownQuestions.value;
+  currentQuestionIndex.value = 0;
+  unknownQuestions.value = []
+};
+
+const startOver = () => {
+  currentRunQuestions.value = [];
+  currentRunQuestions.value = questions.value ? questions.value : [];
+  currentQuestionIndex.value = 0;
 };
 
 const showQuestionsIcon = computed(() => showQuestions.value ? 'pi pi-eye-slash' : 'pi pi-eye');
+
+// Initialize the first run with all questions
+currentRunQuestions.value = questions.value ? [...questions.value] : [];
 </script>

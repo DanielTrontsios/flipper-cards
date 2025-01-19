@@ -11,9 +11,15 @@
     </template>
     <template #footer>
       <div class="flex gap-4 mt-1">
-        <Button label="Start from Beginning" severity="secondary" outlined class="w-full" />
-        <Button label="Review Un-known Answers" class="w-full" />
+        <Button label="Start from Beginning" severity="secondary" outlined class="w-full" @click="$emit('startOver')" />
+        <Button v-if="showReview" label="Review Un-known Answers" class="w-full" @click="$emit('reviewUnknown')" />
       </div>
     </template>
   </Card>
 </template>
+
+<script setup lang="ts">
+defineProps<{
+  showReview: boolean
+}>()
+</script>

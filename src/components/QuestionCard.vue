@@ -13,9 +13,8 @@
     </template>
     <template #footer>
       <div class="flex flex-wrap md:gap-4 gap-1 mt-1">
-        <Button label="I Don't Know" severity="danger" outlined class="w-full"
-          @click="$emit('nextQuestion', 'dontKnow')" />
-        <Button label="I Know" class="w-full" @click="$emit('nextQuestion', 'know')" />
+        <Button label="I Don't Know" severity="danger" outlined class="w-full" @click="nextQuestion('dontKnow')" />
+        <Button label="I Know" class="w-full" @click="nextQuestion('know')" />
       </div>
     </template>
   </Card>
@@ -29,6 +28,13 @@ defineProps<{
   currentQuestion: { type: Question, required: true }
 }>()
 
+const emit = defineEmits(['nextQuestion']);
+
 const showAnswer = ref(false);
+
+const nextQuestion = (type: string) => {
+  showAnswer.value = false;
+  emit('nextQuestion', type);
+}
 
 </script>
