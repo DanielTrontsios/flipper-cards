@@ -19,31 +19,15 @@
   <QuestionCard v-if="questions?.length" :currentQuestion="currentQuestion"
     @nextQuestion="(from: string) => nextQuestion(from)" />
 
-  <Card v-else style="overflow: hidden" class="m-3">
-    <template #header>
-      <img style="max-width: 100%; " alt="user header" src="../src/assets/success.jpg" />
-    </template>
-    <template #title>Congratulations</template>
-    <template #content>
-      <p class="m-0">
-        You've completed all your questions!
-      </p>
-    </template>
-    <template #footer>
-      <div class="flex gap-4 mt-1">
-        <Button label="Start from Beginning" severity="secondary" outlined class="w-full" />
-        <Button label="Review Un-known Answers" class="w-full" />
-      </div>
-    </template>
-  </Card>
+  <CompletionCard v-else />
 
-  <Dialog v-model:visible="deleteQuestionsDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
+  <Dialog v-model:visible="showDeleteQuestionsDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
     <div class="flex items-center gap-4">
       <i class="pi pi-exclamation-triangle !text-3xl" />
       <span>Are you sure you want to delete the selected questions?</span>
     </div>
     <template #footer>
-      <Button label="No" icon="pi pi-times" text @click="deleteQuestionsDialog = false" />
+      <Button label="No" icon="pi pi-times" text @click="showDeleteQuestionsDialog = false" />
       <Button label="Yes" icon="pi pi-check" text @click="confirmDeleteSelected" />
     </template>
   </Dialog>
@@ -60,7 +44,7 @@ const showQuestions = ref(false);
 const currentQuestionIndex = ref(0);
 
 const selectedQuestions = ref([]);
-const deleteQuestionsDialog = ref(false);
+const showDeleteQuestionsDialog = ref(false);
 
 const questions = useObservable<Question[]>(
   from(liveQuery(() => db.questions.toArray()))
@@ -83,16 +67,15 @@ const nextQuestion = (from: string) => {
   }
   console.log(knownQuestions.value);
   console.log(unknownQuestions.value);
-
 };
 
 const openDeleteSelectedDialog = () => {
-  deleteQuestionsDialog.value = true;
+  showDeleteQuestionsDialog.value = true;
 };
 
 const confirmDeleteSelected = async () => {
   await db.questions.bulkDelete(selectedQuestions.value.map((question: Question) => question.id));
-  deleteQuestionsDialog.value = false;
+  showDeleteQuestionsDialog.value = false;
   selectedQuestions.value = [];
   // toast.add({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
 };

@@ -10,6 +10,7 @@ declare module 'vue' {
     Button: typeof import('primevue/button')['default']
     Card: typeof import('primevue/card')['default']
     Column: typeof import('primevue/column')['default']
+    CompletionCard: typeof import('./src/components/CompletionCard.vue')['default']
     DataTable: typeof import('primevue/datatable')['default']
     DeleteDialog: typeof import('./src/components/DeleteDialog.vue')['default']
     Dialog: typeof import('primevue/dialog')['default']
