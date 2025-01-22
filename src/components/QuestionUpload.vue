@@ -8,10 +8,11 @@
 import { ref } from 'vue';
 import type { Question } from "../types"
 import { db } from '../plugins/db';
+import type { FileUploadSelectEvent } from 'primevue';
 
 const error = ref<string | null>(null);       // Holds any error messages
 
-const handleFileUpload = (event) => {
+const handleFileUpload = (event: FileUploadSelectEvent) => {
     const file = event.files?.[0];
     const reader = new FileReader();
 

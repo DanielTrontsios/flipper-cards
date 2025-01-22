@@ -48,7 +48,7 @@ const handleSave = async (andNew: boolean = false) => {
   }
   try {
     // Add the new friend!
-    const id = await db.questions.add({
+    await db.questions.add({
       question: question.value.question,
       answer: question.value.answer
     });

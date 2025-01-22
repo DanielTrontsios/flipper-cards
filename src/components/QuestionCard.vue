@@ -1,6 +1,6 @@
 <template>
   <Card class="m-3">
-    <template #title>Simple Card</template>
+    <template #title>{{ title }}</template>
     <template #content>
       <div class="p-5" @click="showAnswer = !showAnswer">
         <p v-if="!showAnswer" class="m-0">
@@ -21,11 +21,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed, reactive } from "vue";
 import type { Question } from "../types";
 
 defineProps<{
-  currentQuestion: { type: Question, required: true }
+  currentQuestion: Question
 }>()
 
 const emit = defineEmits(['nextQuestion']);
@@ -37,4 +37,5 @@ const nextQuestion = (type: string) => {
   emit('nextQuestion', type);
 }
 
+const title = computed(() => { return showAnswer.value ? 'Answer' : 'Question' })
 </script>

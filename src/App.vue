@@ -1,21 +1,6 @@
 <template>
-  <pre>{{ test }}</pre>
-  <Toolbar style="border: none" class="m-3">
-    <template #start>
-      <NewQuestionDialog />
-      <Button :icon="showQuestionsIcon" label="Questions Table" severity="secondary" text
-        @click="showQuestions = !showQuestions" />
-      <Button icon="pi pi-print" class="mr-2" severity="secondary" text />
-      <QuestionUpload />
-    </template>
-    <template #end>
-      <Button icon="pi pi-trash" severity="danger" outlined @click="openDeleteSelectedDialog"
-        :disabled="!selectedQuestions || !selectedQuestions.length" />
-    </template>
-  </Toolbar>
-
-  <QuestionsTable v-if="showQuestions" class="m-3" :questions="questions"
-    v-model:selectedQuestions="selectedQuestions" />
+  <QuestionsTable :questions="questions" v-model:selectedQuestions="selectedQuestions"
+    @openDeleteSelectedDialog="openDeleteSelectedDialog" />
 
   <QuestionCard v-if="currentRunQuestions.length" :currentQuestion="currentQuestion"
     @nextQuestion="(from: string) => nextQuestion(from)" />
@@ -42,8 +27,6 @@ import { liveQuery } from "dexie";
 import { useObservable, from } from "@vueuse/rxjs";
 import { db } from './plugins/db';
 
-const test = ref();
-const showQuestions = ref(false);
 const currentQuestionIndex = ref(0);
 
 const selectedQuestions = ref([]);
@@ -97,13 +80,6 @@ const startOver = () => {
   currentQuestionIndex.value = 0;
 };
 
-const showQuestionsIcon = computed(() => showQuestions.value ? 'pi pi-eye-slash' : 'pi pi-eye');
-
 // Initialize the first run with all questions
 currentRunQuestions.value = questions.value ? [...questions.value] : [];
-
-
-const fileData = ref<Question[] | null>(null); // Holds the parsed object
-const error = ref<string | null>(null);       // Holds any error messages
-
 </script>
