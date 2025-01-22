@@ -1,4 +1,5 @@
 <template>
+  <pre>{{ test }}</pre>
   <Toolbar style="border: none" class="m-3">
     <template #start>
       <NewQuestionDialog />
@@ -19,7 +20,7 @@
   <QuestionCard v-if="currentRunQuestions.length" :currentQuestion="currentQuestion"
     @nextQuestion="(from: string) => nextQuestion(from)" />
 
-  <CompletionCard v-else :showReview="unknownQuestions.length" @reviewUnknown="reviewUnknownQuestions"
+  <CompletionCard v-else :showReview="!!unknownQuestions.length" @reviewUnknown="reviewUnknownQuestions"
     @startOver="startOver" />
 
   <Dialog v-model:visible="showDeleteQuestionsDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
@@ -41,6 +42,7 @@ import { liveQuery } from "dexie";
 import { useObservable, from } from "@vueuse/rxjs";
 import { db } from './plugins/db';
 
+const test = ref();
 const showQuestions = ref(false);
 const currentQuestionIndex = ref(0);
 

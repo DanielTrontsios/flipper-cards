@@ -7,32 +7,18 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import type { Question } from "../types"
+import { db } from '../plugins/db';
 
-const fileData = ref<Question[] | null>(null); // Holds the parsed object
 const error = ref<string | null>(null);       // Holds any error messages
 
 const handleFileUpload = (event) => {
     const file = event.files?.[0];
-
-    if (!file) {
-        error.value = "No file selected.";
-        return;
-    }
-
-    // Check file type (CSV in this example)
-    if (file.type !== "text/csv") {
-        error.value = "Only CSV files are allowed.";
-        return;
-    }
-
-    error.value = null; // Reset any previous errors
     const reader = new FileReader();
 
     reader.onload = async (e: ProgressEvent<FileReader>) => {
         try {
             const content = e.target?.result;
-            fileData.value = parseCSV(content);
-            console.log(fileData.value);
+            if (content) db.questions.bulkAdd(parseCSV(content?.toString()));
         } catch (err) {
             error.value = "Failed to parse the file.";
             console.error(err);
