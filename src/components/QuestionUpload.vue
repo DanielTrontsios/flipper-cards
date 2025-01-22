@@ -15,6 +15,8 @@ const handleFileUpload = (event) => {
     const file = event.files?.[0];
     const reader = new FileReader();
 
+    reader.readAsText(file); // Read the file content
+
     reader.onload = async (e: ProgressEvent<FileReader>) => {
         try {
             const content = e.target?.result;
@@ -28,8 +30,6 @@ const handleFileUpload = (event) => {
     reader.onerror = () => {
         error.value = "Failed to read the file.";
     };
-
-    reader.readAsText(file); // Read the file content
 }
 
 const parseCSV = (content: string) => {
