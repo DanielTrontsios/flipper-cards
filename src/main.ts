@@ -12,6 +12,9 @@ app.use(ToastService);
 app.use(PrimeVue, {
   theme: {
     preset: Aura
+  },
+  locale: {
+    choose: '',
   }
 });
 

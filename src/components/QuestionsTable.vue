@@ -1,9 +1,14 @@
 <template>
   <Card>
     <template #content>
-      <DataTable :value="questions" paginator stripedRows :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]"
+      <DataTable ref="dt" :value="questions" paginator stripedRows :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]"
         v-model:editingRows="editingRows" dataKey="id" editMode="row" @row-edit-save="onRowEditSave"
         :selection="selectedQuestions" @update:selection="updateSelectedQuestions">
+        <template #header>
+          <div class="text-end pb-4">
+            <Button icon="pi pi-external-link" label="Export" @click="exportCSV($event)" />
+          </div>
+        </template>
         <Column selectionMode="multiple" :exportable="false"></Column>
         <Column field="question" header="Question" style="width: 45%">
           <template #editor="{ data, field }">
@@ -20,16 +25,6 @@
       </DataTable>
     </template>
   </Card>
-  <!-- <Dialog v-model:visible="deleteProductDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
-    <div class="flex items-center gap-4">
-      <i class="pi pi-exclamation-triangle !text-3xl" />
-      <span v-if="product">Are you sure you want to delete <b>{{ product.name }}</b>?</span>
-    </div>
-    <template #footer>
-      <Button label="No" icon="pi pi-times" text @click="deleteProductDialog = false" />
-      <Button label="Yes" icon="pi pi-check" @click="deleteProduct" />
-    </template>
-  </Dialog> -->
 </template>
 
 <script setup lang="ts">
@@ -52,5 +47,10 @@ const updateSelectedQuestions = (newSelectedQuestions: Question) => {
 const onRowEditSave = async (event) => {
   let { newData, index } = event;
   await db.questions.put({ ...newData });
+};
+
+const dt = ref();
+const exportCSV = () => {
+  dt.value.exportCSV();
 };
 </script>

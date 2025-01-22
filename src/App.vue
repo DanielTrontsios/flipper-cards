@@ -5,7 +5,7 @@
       <Button :icon="showQuestionsIcon" label="Questions Table" severity="secondary" text
         @click="showQuestions = !showQuestions" />
       <Button icon="pi pi-print" class="mr-2" severity="secondary" text />
-      <Button icon="pi pi-upload" severity="secondary" text />
+      <QuestionUpload />
     </template>
     <template #end>
       <Button icon="pi pi-trash" severity="danger" outlined @click="openDeleteSelectedDialog"
@@ -99,4 +99,9 @@ const showQuestionsIcon = computed(() => showQuestions.value ? 'pi pi-eye-slash'
 
 // Initialize the first run with all questions
 currentRunQuestions.value = questions.value ? [...questions.value] : [];
+
+
+const fileData = ref<Question[] | null>(null); // Holds the parsed object
+const error = ref<string | null>(null);       // Holds any error messages
+
 </script>

@@ -7,6 +7,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    Badge: typeof import('primevue/badge')['default']
     Button: typeof import('primevue/button')['default']
     Card: typeof import('primevue/card')['default']
     Column: typeof import('primevue/column')['default']
@@ -14,6 +15,7 @@ declare module 'vue' {
     DataTable: typeof import('primevue/datatable')['default']
     DeleteDialog: typeof import('./src/components/DeleteDialog.vue')['default']
     Dialog: typeof import('primevue/dialog')['default']
+    FileUpload: typeof import('primevue/fileupload')['default']
     Form: typeof import('@primevue/forms/form')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     IconField: typeof import('primevue/iconfield')['default']
@@ -22,8 +24,10 @@ declare module 'vue' {
     InputText: typeof import('primevue/inputtext')['default']
     Message: typeof import('primevue/message')['default']
     NewQuestionDialog: typeof import('./src/components/NewQuestionDialog.vue')['default']
+    ProgressBar: typeof import('primevue/progressbar')['default']
     QuestionCard: typeof import('./src/components/QuestionCard.vue')['default']
     QuestionsTable: typeof import('./src/components/QuestionsTable.vue')['default']
+    QuestionUpload: typeof import('./src/components/QuestionUpload.vue')['default']
     SplitButton: typeof import('primevue/splitbutton')['default']
     Tests: typeof import('./src/components/tests.vue')['default']
     Toast: typeof import('primevue/toast')['default']
