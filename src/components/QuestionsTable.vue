@@ -39,7 +39,6 @@ import { computed, ref } from 'vue';
 import type { Question } from '../types';
 import { db } from '../plugins/db';
 import type { DataTableRowEditSaveEvent } from 'primevue';
-import { timeout } from 'rxjs';
 
 defineProps<{
   questions: Question[] | undefined

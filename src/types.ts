@@ -3,3 +3,7 @@ export interface Question {
   question: string;
   answer: string;
 }
+
+export interface Deck {
+  title: string;
+}
