@@ -8,6 +8,9 @@
   <CompletionCard v-else :showReview="!!unknownQuestions.length" @reviewUnknown="reviewUnknownQuestions"
     @startOver="startOver" />
 
+  <Account v-if="session" :session="session" />
+  <Auth v-else />
+
   <Dialog v-model:visible="showDeleteQuestionsDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
     <div class="flex items-center gap-4">
       <i class="pi pi-exclamation-triangle !text-3xl" />
@@ -21,11 +24,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import type { Question } from "./types";
 import { liveQuery } from "dexie";
 import { useObservable, from } from "@vueuse/rxjs";
 import { db } from './plugins/db';
+import { supabase } from './plugins/supabaseClient'
 
 const currentQuestionIndex = ref(0);
 
@@ -35,6 +39,19 @@ const showDeleteQuestionsDialog = ref(false);
 const questions = useObservable<Question[]>(
   from(liveQuery(() => db.questions.toArray()))
 );
+
+
+const session = ref()
+
+onMounted(() => {
+  supabase.auth.getSession().then(({ data }) => {
+    session.value = data.session
+  })
+
+  supabase.auth.onAuthStateChange((_, _session) => {
+    session.value = _session
+  })
+})
 
 const knownQuestions = ref<Question[]>([]);
 const unknownQuestions = ref<Question[]>([]);
@@ -83,3 +100,9 @@ const startOver = () => {
 // Initialize the first run with all questions
 currentRunQuestions.value = questions.value ? [...questions.value] : [];
 </script>
+
+<style>
+#app {
+  max-width: 425px;
+}
+</style>
