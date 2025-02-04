@@ -7,8 +7,9 @@
       <QuestionUpload />
     </template>
     <template #end>
-      <Button icon="pi pi-trash" severity="danger" outlined @click="$emit('openDeleteSelectedDialog')"
-        :disabled="!selectedQuestions || !selectedQuestions.length" />
+      <Button icon="pi pi-trash" severity="danger" text @click="$emit('openDeleteSelectedDialog')"
+        v-if="selectedQuestions.length" />
+      <AccountDialog />
     </template>
   </Toolbar>
   <Card v-if="showQuestions" class="m-3">
@@ -17,6 +18,11 @@
         v-model:editingRows="editingRows" dataKey="id" editMode="row" @row-edit-save="onRowEditSave"
         :selection="selectedQuestions" @update:selection="updateSelectedQuestions">
         <Column selectionMode="multiple" :exportable="false"></Column>
+        <Column field="id" header="Question" style="width: 45%">
+          <template #editor="{ data, field }">
+            <InputText v-model="data[field]" fluid />
+          </template>
+        </Column>
         <Column field="question" header="Question" style="width: 45%">
           <template #editor="{ data, field }">
             <InputText v-model="data[field]" fluid />

@@ -1,4 +1,5 @@
 <template>
+  <Menubar :model="settings.menuItems" />
   <QuestionsTable :questions="questions" v-model:selectedQuestions="selectedQuestions"
     @openDeleteSelectedDialog="openDeleteSelectedDialog" />
 
@@ -7,9 +8,6 @@
 
   <CompletionCard v-else :showReview="!!unknownQuestions.length" @reviewUnknown="reviewUnknownQuestions"
     @startOver="startOver" />
-
-  <Account v-if="session" :session="session" />
-  <Auth v-else />
 
   <Dialog v-model:visible="showDeleteQuestionsDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
     <div class="flex items-center gap-4">
@@ -30,8 +28,10 @@ import { liveQuery } from "dexie";
 import { useObservable, from } from "@vueuse/rxjs";
 import { db } from './plugins/db';
 import { supabase } from './plugins/supabaseClient'
+import { useSettingsStore } from './stores/settings'
 
 const currentQuestionIndex = ref(0);
+const settings = useSettingsStore();
 
 const selectedQuestions = ref([]);
 const showDeleteQuestionsDialog = ref(false);
@@ -40,16 +40,13 @@ const questions = useObservable<Question[]>(
   from(liveQuery(() => db.questions.toArray()))
 );
 
-
-const session = ref()
-
 onMounted(() => {
   supabase.auth.getSession().then(({ data }) => {
-    session.value = data.session
+    settings.session = data.session
   })
 
   supabase.auth.onAuthStateChange((_, _session) => {
-    session.value = _session
+    settings.session = _session
   })
 })
 

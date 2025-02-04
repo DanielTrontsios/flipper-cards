@@ -7,16 +7,21 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    Account: typeof import('./src/components/Account.vue')['default']
-    Auth: typeof import('./src/components/Auth.vue')['default']
+    Account: typeof import('./src/components/account/Account.vue')['default']
+    AccountDialog: typeof import('./src/components/dialogs/AccountDialog.vue')['default']
+    Auth: typeof import('./src/components/account/Auth.vue')['default']
+    AuthDialog: typeof import('./src/components/dialogs/AuthDialog.vue')['default']
     Button: typeof import('primevue/button')['default']
     Card: typeof import('primevue/card')['default']
+    Checkbox: typeof import('primevue/checkbox')['default']
     Column: typeof import('primevue/column')['default']
     CompletionCard: typeof import('./src/components/CompletionCard.vue')['default']
     DataTable: typeof import('primevue/datatable')['default']
     Dialog: typeof import('primevue/dialog')['default']
     FileUpload: typeof import('primevue/fileupload')['default']
+    IftaLabel: typeof import('primevue/iftalabel')['default']
     InputText: typeof import('primevue/inputtext')['default']
+    Menubar: typeof import('primevue/menubar')['default']
     NewQuestionDialog: typeof import('./src/components/NewQuestionDialog.vue')['default']
     QuestionCard: typeof import('./src/components/QuestionCard.vue')['default']
     QuestionsTable: typeof import('./src/components/QuestionsTable.vue')['default']

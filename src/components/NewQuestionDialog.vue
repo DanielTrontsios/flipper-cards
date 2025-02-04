@@ -11,10 +11,15 @@
         autocomplete="off" />
     </div>
 
-    <div class="flex flex-column gap-2 mb-6">
+    <div class="flex flex-column gap-2 mb-4">
       <label for="answer" class="font-semibold w-24">Answer</label>
       <InputText v-model="question.answer" :invalid="!question.answer" id="answer" class="flex-auto"
         autocomplete="off" />
+    </div>
+
+    <div class="flex align-items-center gap-2 mb-6 ">
+      <label for="syncToCloud" class="font-semibold w-24">Sync to Cloud</label>
+      <Checkbox id="syncToCloud" v-model="syncToCloud" binary :disabled="!settings.session" />
     </div>
     <div class="flex justify-end gap-2">
       <Button type="button" label="Cancel" severity="secondary" @click="handleCancel()"></Button>
@@ -28,14 +33,18 @@
 import { ref } from "vue";
 import { useToast } from "primevue/usetoast";
 import { db } from '../plugins/db';
+import { supabase } from '../plugins/supabaseClient'
+import { useSettingsStore } from '../stores/settings'
 
 import type { Question } from "../types";
 
 const toast = useToast();
 const emit = defineEmits(['addQuestion']);
+const settings = useSettingsStore();
 
 const question = ref({} as Omit<Question, 'id'>);
 const visible = ref(false);
+const syncToCloud = ref(settings.session ? true : false);
 
 const handleCancel = () => {
   question.value = {} as Omit<Question, 'id'>;
@@ -47,11 +56,21 @@ const handleSave = async (andNew: boolean = false) => {
     return;
   }
   try {
-    // Add the new friend!
-    await db.questions.add({
+    const insertQuestion = {
       question: question.value.question,
       answer: question.value.answer
-    });
+    }
+    if (syncToCloud.value && settings.session) {
+      const { data, error } = await supabase
+        .from('questions')
+        .insert([{
+          question: question.value.question,
+          answer: question.value.answer
+        }]).select();
+      insertQuestion.id = data[0].id;
+    }
+    await db.questions.add(insertQuestion);
+
     emit('addQuestion', question.value);
     toast.add({ severity: 'success', summary: 'Success', detail: 'New Question Added', life: 3000 });
     question.value = {} as Omit<Question, 'id'>;
