@@ -77,26 +77,22 @@ async function signOut() {
 
 <template>
   <form class="form-widget" @submit.prevent="updateProfile">
-    <div>
+    <div class="flex align-items-center justify-content-between gap-4 mb-4">
       <label for="email">Email</label>
-      <input id="email" type="text" :value="session.user.email" disabled />
+      <InputText id="email" type="text" :value="session.user.email" disabled />
     </div>
-    <div>
+    <div class="flex align-items-center justify-content-between gap-4 mb-4">
       <label for="username">Name</label>
-      <input id="username" type="text" v-model="username" />
+      <InputText id="username" type="text" v-model="username" />
     </div>
-    <div>
+    <div class="flex align-items-center justify-content-between gap-4 mb-6">
       <label for="website">Website</label>
-      <input id="website" type="url" v-model="website" />
+      <InputText id="website" type="url" v-model="website" />
     </div>
 
-    <div>
-      <input type="submit" class="button primary block" :value="loading ? 'Loading ...' : 'Update'"
-        :disabled="loading" />
-    </div>
-
-    <div>
-      <button class="button block" @click="signOut" :disabled="loading">Sign Out</button>
+    <div class="flex justify-content-end gap-2">
+      <Button type="submit" :label="loading ? 'Loading ...' : 'Update'" :disabled="loading" />
+      <Button @click="signOut" :disabled="loading">Sign Out</Button>
     </div>
   </form>
 </template>

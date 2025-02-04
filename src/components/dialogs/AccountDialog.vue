@@ -8,7 +8,7 @@ const settings = useSettingsStore();
 
 <template>
   <Button icon="pi pi-user" severity="primary" outlined @click="visible = true" />
-  <Dialog v-model:visible="visible" modal header="Sign In">
+  <Dialog v-model:visible="visible" modal :header="settings.session ? 'Account Info' : 'Sign In'">
     <Account v-if="settings.session" :session="settings.session" />
     <Auth v-else />
   </Dialog>
