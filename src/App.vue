@@ -1,5 +1,4 @@
 <template>
-  <Menubar :model="settings.menuItems" />
   <QuestionsTable :questions="questions" v-model:selectedQuestions="selectedQuestions"
     @openDeleteSelectedDialog="openDeleteSelectedDialog" />
 

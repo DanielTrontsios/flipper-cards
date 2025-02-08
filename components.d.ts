@@ -16,6 +16,8 @@ declare module 'vue' {
     Checkbox: typeof import('primevue/checkbox')['default']
     Column: typeof import('primevue/column')['default']
     CompletionCard: typeof import('./src/components/CompletionCard.vue')['default']
+    ConfimrDialog: typeof import('./src/components/dialogs/ConfimrDialog.vue')['default']
+    ConfirmDialog: typeof import('primevue/confirmdialog')['default']
     DataTable: typeof import('primevue/datatable')['default']
     Dialog: typeof import('primevue/dialog')['default']
     FileUpload: typeof import('primevue/fileupload')['default']
@@ -26,6 +28,8 @@ declare module 'vue' {
     QuestionCard: typeof import('./src/components/QuestionCard.vue')['default']
     QuestionsTable: typeof import('./src/components/QuestionsTable.vue')['default']
     QuestionUpload: typeof import('./src/components/QuestionUpload.vue')['default']
+    SpeedDial: typeof import('primevue/speeddial')['default']
+    SplitButton: typeof import('primevue/splitbutton')['default']
     Toast: typeof import('primevue/toast')['default']
     Toolbar: typeof import('primevue/toolbar')['default']
   }

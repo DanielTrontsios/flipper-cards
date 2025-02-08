@@ -11,7 +11,7 @@ const db = new Dexie('QuestionsDB') as Dexie & {
 
 // Schema declaration:
 db.version(1).stores({
-  questions: '++id, question, answer' // primary key "id" (for the runtime!)
+  questions: '++id, question, answer, deck' // primary key "id" (for the runtime!)
 });
 
 export { db };
