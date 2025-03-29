@@ -39,5 +39,9 @@ export const useSettingsStore = defineStore('settings', {
         console.error('Error downloading questions', error.message);
       }
     },
+    async uploadQuestions() {
+      const localQuestions = await db.questions.toArray();      
+      const {data, error} = await supabase.from('questions').upsert(localQuestions.map(({synced, ...rest}) => rest));      
+    }
   },
 })

@@ -18,11 +18,6 @@
         v-model:editingRows="editingRows" dataKey="id" editMode="row" @row-edit-save="onRowEditSave"
         :selection="selectedQuestions" @update:selection="updateSelectedQuestions">
         <Column selectionMode="multiple" :exportable="false"></Column>
-        <Column field="id" header="Id" style="width: 45%">
-          <template #editor="{ data, field }">
-            <InputText v-model="data[field]" fluid />
-          </template>
-        </Column>
         <Column field="synced" header="Synced" style="width: 45%">
           <template #editor="{ data, field }">
             <InputText v-model="data[field]" fluid />
