@@ -14,7 +14,7 @@ const items = [
     label: 'Upload Questions',
     icon: 'pi pi-cloud-upload',
     command: () => {
-      console.log('Account');
+      uploadQuestions();
     }
   },
   {
@@ -26,6 +26,25 @@ const items = [
   },
 ];
 
+const uploadQuestions = () => {
+  confirm.require({
+    message: 'Are you sure you want to upload all the questions to your Account?',
+    header: 'Confirmation',
+    icon: 'pi pi-exclamation-triangle',
+    rejectProps: {
+      label: 'Cancel',
+      severity: 'secondary',
+      outlined: true
+    },
+    acceptProps: {
+      label: 'Sync'
+    },
+    accept: async () => {
+      await settings.uploadQuestions();
+      toast.add({ severity: 'success', summary: 'Success', detail: 'Your questions have been upload to the cloud.', life: 3000 });
+    }
+  });
+}
 const downloadQuestions = () => {
   confirm.require({
     message: 'Are you sure you want to retrieve all the questions saved to your Account?',

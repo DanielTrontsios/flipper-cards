@@ -15,18 +15,20 @@ export const useSettingsStore = defineStore('settings', {
     async downloadQuestions() {
       try {
         const { data, error } = await supabase.from('questions').select().eq('owner', this.session?.user?.id)
+        if (error) {
+          throw error;
+        }
+        const mappedData = data.map((question) => ({ ...question, synced: 1 }))
         const questions = await db.questions.toArray();
-        let insertQuestion;
-        const mergedMap = [...data, ...questions].reduce((accumulator, curr) => {
+        const mergedMap = [...mappedData, ...questions].reduce((accumulator, curr) => {
           if (!accumulator.has(curr.id)) {
-            insertQuestion = {
+            accumulator.set(curr.id, {
               id: curr.id,
               question: curr.question,
               answer: curr.answer,
-              deck: curr.deck
-            }
-
-            accumulator.set(insertQuestion.id, insertQuestion);
+              deck: curr.deck,
+              synced: curr.synced
+            });
           }
 
           return accumulator;

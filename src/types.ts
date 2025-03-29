@@ -1,7 +1,11 @@
 export interface Question {
-  id: string;
+  id: string | null;
   question: string;
   answer: string;
+  deck?: string;
+  synced: number;
+  lastModified?: number;
+  conflict?: number;
 }
 
 export interface Deck {

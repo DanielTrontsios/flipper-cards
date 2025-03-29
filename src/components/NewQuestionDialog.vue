@@ -39,7 +39,6 @@ import { useSettingsStore } from '../stores/settings'
 import type { Question } from "../types";
 
 const toast = useToast();
-const emit = defineEmits(['addQuestion']);
 const settings = useSettingsStore();
 
 const question = ref({} as Omit<Question, 'id'>);
@@ -56,9 +55,11 @@ const handleSave = async (andNew: boolean = false) => {
     return;
   }
   try {
-    const insertQuestion = {
+    const insertQuestion: Question = {
+      id: null,
       question: question.value.question,
-      answer: question.value.answer
+      answer: question.value.answer,
+      synced: 0
     }
     if (syncToCloud.value && settings.session) {
       const { data, error } = await supabase
@@ -67,11 +68,15 @@ const handleSave = async (andNew: boolean = false) => {
           question: question.value.question,
           answer: question.value.answer
         }]).select();
-      insertQuestion.id = data[0].id;
+      if (data) {
+        insertQuestion.id = data[0].id;
+        insertQuestion.synced = 1;
+      } else if (error) {
+        throw error;
+      }
     }
     await db.questions.add(insertQuestion);
 
-    emit('addQuestion', question.value);
     toast.add({ severity: 'success', summary: 'Success', detail: 'New Question Added', life: 3000 });
     question.value = {} as Omit<Question, 'id'>;
     if (!andNew) visible.value = false;
