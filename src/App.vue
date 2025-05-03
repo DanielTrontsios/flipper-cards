@@ -32,8 +32,6 @@ import { db } from './plugins/db';
 import { supabase } from './plugins/supabaseClient'
 import { useSettingsStore } from './stores/settings'
 
-const tempBool = ref(false);
-
 const currentQuestionIndex = ref(0);
 const settings = useSettingsStore();
 

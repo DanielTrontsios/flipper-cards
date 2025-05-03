@@ -23,7 +23,7 @@ const handleFileUpload = async (event: FileUploadSelectEvent) => {
     }
 
     const reader = new FileReader();
-    let csvString;
+    let csvString: string | null = null;
 
     settings.isFileUploading = true;
     // Check the file type
@@ -32,7 +32,7 @@ const handleFileUpload = async (event: FileUploadSelectEvent) => {
         reader.readAsDataURL(file);
 
         reader.onload = async () => {
-            const content = reader.result.split(',')[1];
+            const content = typeof reader.result === 'string' ? reader.result.split(',')[1] : null;
             if (content) {
                 csvString = await pdfToCsvString(content);
                 const parsedData = parseCSV(csvString);
@@ -71,14 +71,15 @@ const handleFileUpload = async (event: FileUploadSelectEvent) => {
     };
 };
 
-const parseCSV = (content: string) => {
+const parseCSV = (content: string | null) => {
+    if (!content) return [];
     const lines = content.split('\n').filter(line => line.trim());
     const result: Omit<Question, 'id'>[] = [];
 
     for (const line of lines) {
         const [question, answer] = line.split(',').map(part => part.trim());
         if (question && answer) {
-            result.push({ question, answer });
+            result.push({ question, answer, synced: 0 });
         }
     }
 

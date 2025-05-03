@@ -1,5 +1,5 @@
 // import { OpenAI } from "openai";
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, type Part } from "@google/genai";
 
 const config = {
   apiKey: import.meta.env.VITE_OPENAI_API_KEY
@@ -32,12 +32,12 @@ export const pdfToCsvString = async (fileBase64: String) => {
         data: fileBase64
       }
     }
-  ];
+  ] as Part[];
 
   const response = await client.models.generateContent({
     model: "gemini-2.0-flash",
     contents: contents,
   });
 
-  return response.text;
+  return response.text || null;
 }

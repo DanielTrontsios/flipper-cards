@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { supabase } from '../plugins/supabaseClient'
 import { db } from '../plugins/db';
+import type { Session } from '@supabase/supabase-js';
 
 // You can name the return value of `defineStore()` anything you want,
 // but it's best to use the name of the store and surround it with `use`
@@ -8,7 +9,7 @@ import { db } from '../plugins/db';
 // the first argument is a unique id of the store across your application
 export const useSettingsStore = defineStore('settings', {
   state: () => ({
-    session: null,
+    session: null as Session | null,
     isFileUploading: false
   }),
   actions: {
@@ -35,14 +36,15 @@ export const useSettingsStore = defineStore('settings', {
           return accumulator;
         }, new Map());
         const final = Array.from(mergedMap.values());
+        // @ts-ignore
         db.questions.bulkPut(final);
       } catch (error) {
-        console.error('Error downloading questions', error.message);
+        error instanceof Error && console.error('Error downloading questions', error.message);
       }
     },
     async uploadQuestions() {
       const localQuestions = await db.questions.toArray();
-      const { data, error } = await supabase.from('questions').upsert(localQuestions.map(({ synced, ...rest }) => rest));
+      await supabase.from('questions').upsert(localQuestions.map(({ synced, ...rest }) => rest));
     }
   },
 })
