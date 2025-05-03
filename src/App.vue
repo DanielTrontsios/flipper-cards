@@ -1,4 +1,7 @@
 <template>
+  <Message v-if="settings.isFileUploading" severity="info" class="m-3 flex justify-content-center">
+    A file is being uploaded, <br /> please do not refresh the page!
+  </Message>
   <QuestionsTable :questions="questions" v-model:selectedQuestions="selectedQuestions"
     @openDeleteSelectedDialog="openDeleteSelectedDialog" />
 
@@ -28,6 +31,8 @@ import { useObservable, from } from "@vueuse/rxjs";
 import { db } from './plugins/db';
 import { supabase } from './plugins/supabaseClient'
 import { useSettingsStore } from './stores/settings'
+
+const tempBool = ref(false);
 
 const currentQuestionIndex = ref(0);
 const settings = useSettingsStore();

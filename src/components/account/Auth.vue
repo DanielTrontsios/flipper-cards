@@ -4,6 +4,7 @@ import { supabase } from '../../plugins/supabaseClient'
 
 const loading = ref(false)
 const email = ref('')
+const message = ref('')
 
 const handleLogin = async () => {
   try {
@@ -12,7 +13,7 @@ const handleLogin = async () => {
       email: email.value,
     })
     if (error) throw error
-    alert('Check your email for the login link!')
+    message.value = 'Check your email for the magic link!'
   } catch (error) {
     if (error instanceof Error) {
       alert(error.message)
@@ -31,6 +32,7 @@ const handleLogin = async () => {
       <label for="email" class="font-semibold w-24">Email</label>
       <InputText id="email" class="flex-auto" autocomplete="off" v-model="email" />
     </div>
+    <div v-if="message" class="mb-4 text-green-500">{{ message }}</div>
     <div class="flex justify-content-end gap-2">
       <Button type="button" label="Cancel" severity="secondary" @click="visible = false"></Button>
       <Button type="submit" :label="loading ? 'Loading' : 'Send magic link'" :disabled="loading"></Button>

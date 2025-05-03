@@ -8,7 +8,8 @@ import { db } from '../plugins/db';
 // the first argument is a unique id of the store across your application
 export const useSettingsStore = defineStore('settings', {
   state: () => ({
-    session: null
+    session: null,
+    isFileUploading: false
   }),
   actions: {
     // since we rely on `this`, we cannot use an arrow function
@@ -40,8 +41,8 @@ export const useSettingsStore = defineStore('settings', {
       }
     },
     async uploadQuestions() {
-      const localQuestions = await db.questions.toArray();      
-      const {data, error} = await supabase.from('questions').upsert(localQuestions.map(({synced, ...rest}) => rest));      
+      const localQuestions = await db.questions.toArray();
+      const { data, error } = await supabase.from('questions').upsert(localQuestions.map(({ synced, ...rest }) => rest));
     }
   },
 })
